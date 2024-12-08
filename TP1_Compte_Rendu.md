@@ -445,10 +445,9 @@ DDORA IP 10.1.1.248
 ```
 ```
 PC -> show ip
-```
 NAME        : PC4[1]
 IP/MASK     : 10.1.1.248/24
-
+```
 #### Résultat :  
 ```
 IP attribuée par dnsmasq : 10.1.1.210
