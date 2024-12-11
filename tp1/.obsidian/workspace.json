@@ -1,24 +1,20 @@
 {
   "main": {
-    "id": "d6c2cd7bd77a7e07",
+    "id": "d8c651687465741f",
     "type": "split",
     "children": [
       {
-        "id": "5335fea45e102e78",
+        "id": "c74a2abe4a258604",
         "type": "tabs",
         "children": [
           {
-            "id": "5b77778e9c564be8",
+            "id": "60c3783a269e1b7e",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "tp2/README.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Nouvel onglet"
             }
           }
         ]
@@ -27,15 +23,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "82eaf594f556d1a1",
+    "id": "04ebb4d1a85d3c68",
     "type": "split",
     "children": [
       {
-        "id": "6bc7a011e8cf6253",
+        "id": "56d4e44b401ab5ae",
         "type": "tabs",
         "children": [
           {
-            "id": "adb2a5673fa5ded0",
+            "id": "0095dd8052c08e4b",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -47,7 +43,7 @@
             }
           },
           {
-            "id": "0198db2d583da2f0",
+            "id": "dada53a587f7b45c",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -64,7 +60,7 @@
             }
           },
           {
-            "id": "200ee2ef86ba8b54",
+            "id": "4550cc56d58c810d",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -80,20 +76,19 @@
     "width": 300
   },
   "right": {
-    "id": "6b893bd1be79097f",
+    "id": "0e319fc4a2dffdbd",
     "type": "split",
     "children": [
       {
-        "id": "28360b9288924291",
+        "id": "198d8a33fef66e64",
         "type": "tabs",
         "children": [
           {
-            "id": "8e0d6b69904aa111",
+            "id": "7023ab8e4f9432e0",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "tp2/README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,25 +98,24 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Rétrolien pour README"
+              "title": "Rétroliens"
             }
           },
           {
-            "id": "a27a15bbf003d9b4",
+            "id": "b2744b1c71380935",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "tp2/README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Liens sortants de README"
+              "title": "Liens sortants"
             }
           },
           {
-            "id": "8a918893127eeb3d",
+            "id": "e40adc6d9cac1c5b",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -134,15 +128,13 @@
             }
           },
           {
-            "id": "656f72a35d9310e0",
+            "id": "3f970c4d71949944",
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "tp2/README.md"
-              },
+              "state": {},
               "icon": "lucide-list",
-              "title": "Plan de README"
+              "title": "Plan"
             }
           }
         ]
@@ -162,13 +154,6 @@
       "command-palette:Ouvrir la palette de commandes": false
     }
   },
-  "active": "5b77778e9c564be8",
-  "lastOpenFiles": [
-    "tp1/README.md",
-    "tp2/arp_mitm.pcap.pcapng",
-    "tp2/a modif.pcapng",
-    "tp2/echange ARP.pcapng",
-    "tp2/échange DHCP DORA.pcapng",
-    "tp2/README.md"
-  ]
+  "active": "60c3783a269e1b7e",
+  "lastOpenFiles": []
 }
