@@ -2,45 +2,12 @@
   
 
 # I. Routage
-
-  
-
-![Topo 1](./img/topo1.png)
-
-  
-
-➜ **Tableau d'adressage**
-
-  
-
-| Nom                | IP              |
-
-| ------------------ | --------------- |
-
-| `router.tp2.efrei` | `10.2.1.254/24` |
-
-| `node1.tp2.efrei`  | `10.2.1.1/24`   |
-
-  
-
-➜ **Reproduisez la topologie dans votre GNS3**, quelques hints :
-
-  
-
-- il faudra indiquer à GNS que votre `router.tp2.efrei` a une carte réseau supplémentaire
-
-- le NAT est disponible dans la catégorie "End Devices"
-
-  - il va symboliser un accès internet
-
   
 
 🌞 **Configuration de `router.tp2.efrei`**
 
+La config :
 ```
-[root@localhost ~]# nmcli connection reload
-[root@localhost ~]# nmcli connection up lan
-Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/3)
 [root@localhost ~]# ip a
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -56,17 +23,8 @@ Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkMa
        valid_lft forever preferred_lft forever
 3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
     link/ether 08:00:27:15:7f:f6 brd ff:ff:ff:ff:ff:ff
-[root@localhost ~]#
-
 ```
-
-  
-
-- l'interface de `router.tp2.efrei` qui est branchée au NAT doit être configurée automatiquement *via* DHCP, la magie de GNS :)
-
-  - c'est indiqué dans le [mémo Rocky](../../memo/rocky_network.md) comment setup une interface pour qu'elle récup une IP en DHCP
-
-  - une fois qu'elle a récupéré une IP, prouvez que vous avez un accès internet en une commande `ping`
+Le ping fonctionne :
 ```
 [diego@localhost ~]$ ping 8.8.8.8
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
@@ -74,52 +32,19 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 64 bytes from 8.8.8.8: icmp_seq=2 ttl=115 time=28.2 ms
 64 bytes from 8.8.8.8: icmp_seq=3 ttl=115 time=31.4 ms
 64 bytes from 8.8.8.8: icmp_seq=4 ttl=115 time=29.1 ms
-```
-- l'autre interface de `router.tp2.efrei` sera configurée statiquement
-
-  - voir l'IP demandée dans le tableau d'adressage juste au dessus
-
-- je veux un beau `ip a` une fois que tout est conf !
-
-  
-
-Aussi, on va demander à cette machine Rocky de ne pas jeter les paquets IPs qui ne lui sont pas destinés, **afin qu'elle puisse agir comme un routeur**.
-
-  
-
-Pour ça, deux commandes à exécuter sur `router.tp2.efrei` :
-
-  
-
-```bash
-
-# Petite modif du firewall qui nous bloquerait sinon
-
-[it4@router ~]$ sudo firewall-cmd --add-masquerade
-
-success
-
-  
-
-# Et on tape aussi la même commande une deuxième fois, en ajoutant --permanent pour que ce soit persistent après un éventuel reboot
-
-[it4@router ~]$ sudo firewall-cmd --add-masquerade --permanent
-
-success
-
-```
-
-  
+``` 
 
 🌞 **Configuration de `node1.tp2.efrei`**
 
-  
+Conf:
+```
+VPCS> show
 
-- configurer de façon statique son IP
+NAME   IP/MASK              GATEWAY           MAC                LPORT  RHOST:PORT
+VPCS1  10.2.1.1/24          255.255.255.0     00:50:79:66:68:00  20006  127.0.0.1:20007
+       fe80::250:79ff:fe66:6800/64
 
-  - voir l'IP demandée dans le tableau d'adressage juste au dessus
-
-- prouvez avec une commande `ping` que `node1.tp2.efrei` peut joindre `router.tp2.efrei`
+```
 ```
 VPCS> ping 10.2.1.254/24
 
@@ -128,27 +53,21 @@ VPCS> ping 10.2.1.254/24
 84 bytes from 10.2.1.254 icmp_seq=3 ttl=64 time=5.916 ms
 84 bytes from 10.2.1.254 icmp_seq=4 ttl=64 time=5.287 ms
 84 bytes from 10.2.1.254 icmp_seq=5 ttl=64 time=5.872 ms
-^C
-
 ```
-
-- ajoutez une route par défaut qui passe par `router.tp2.efrei`
-
-- prouvez que vous avez un accès internet depuis `node1.tp2.efrei` désormais, avec une commande `ping`
+Ajout de la route par défaut
 ```
 VPCS : 10.2.1.1 255.255.255.0 gateway 10.2.1.254
+```
 
+```
 VPCS> ping 8.8.8.8
 
 84 bytes from 8.8.8.8 icmp_seq=1 ttl=114 time=39.631 ms
 84 bytes from 8.8.8.8 icmp_seq=2 ttl=114 time=40.686 ms
 84 bytes from 8.8.8.8 icmp_seq=3 ttl=114 time=31.989 ms
 84 bytes from 8.8.8.8 icmp_seq=4 ttl=114 time=34.715 ms
-^C
-VPCS>
-
 ```
-- utilisez une commande `traceroute` pour prouver que vos paquets passent bien par `router.tp2.efrei` avant de sortir vers internet
+Traceroute :
 ```
 VPCS> trace 8.8.8.8
 trace to 8.8.8.8, 8 hops max, press Ctrl+C to stop
@@ -160,27 +79,12 @@ trace to 8.8.8.8, 8 hops max, press Ctrl+C to stop
  6     *  *  *
  7     *  *  *
  8     *  *  *
-
-
 ```
-
-  
-
-➜ A la fin de cette section vous avez donc :
-
-  
-
-- un routeur, qui, grâce à du NAT, est connecté à Internet
-
-- il est aussi connecté au LAN `10.2.1.0/24`
-
-- les clients du LAN, comme `node1.tp2.efrei` ont eux aussi accès internet, en passant par `router.tp2.efrei` après l'ajout d'une route
-
-  
 
 🌞 **Afficher la CAM Table du switch**
 
 ```
+VPCS> show mac address-table
 -------------------------------------------
 
 Vlan    Mac Address       Type        Ports
@@ -188,115 +92,70 @@ Vlan    Mac Address       Type        Ports
    1    0050.7966.6800    DYNAMIC     Et0/1
    1    0800.2715.7ff6    DYNAMIC     Et0/0
 Total Mac Addresses for this criterion: 2
-
 ```
 
-  
-
-- sur le switch IOU mis en place, affichez la CAM Table
-
-- un switch apprend les adresses MAC de toutes les personnes qui envoient des messages
-
-- la CAM table contient les infos de quelle MAC est branché sur quel port
-
-- la commande c'est `show mac address-table` une fois connecté au terminal du switch
-
-  
-
-# II. Serveur DHCP
-
-  
-
-![Topo 2](./img/topo2.png)
-
-  
-
-➜ **Tableau d'adressage**
-
-  
-
-| Nom                | IP              |
-
-| ------------------ | --------------- |
-
-| `router.tp2.efrei` | `10.2.1.254/24` |
-
-| `node1.tp2.efrei`  | `N/A`           |
-
-| `dhcp.tp2.efrei`   | `10.2.1.253/24` |
-
-  
+# II. Serveur DHCP  
 
 🌞 **Install et conf du serveur DHCP** sur `dhcp.tp2.efrei`
+```
+[root@localhost ~]# cat /etc/dhcp/dhcpd.conf
 
-  
+authoritative;
 
-- pour l'install du serveur, il faut un accès internet... il suffit d'ajouter là encore une route par défaut, qui passe par `router.tp2.efrei`
-
-- référez-vous au [TP1](../1/README.md)
-
-- cette fois, dans la conf, ajoutez une option DHCP pour donner au client l'adresse de la passerelle du réseau (c'est à dire l'adresse de `router.tp2.efrei`) en plus de leur proposer une IP libre
-
-  
+subnet 10.2.1.0 netmask 255.255.255.0 {
+    range 10.2.1.10 10.2.1.253;
+    option broadcast-address 10.2.1.255;
+    option routers 10.2.1.254;
+    option domaine-name-servers 1.1.1.1;
+}
+```
 
 🌞 **Test du DHCP** sur `node1.tp2.efrei`
+```
+Executing the startup file
 
-  
+DDORA IP 10.2.1.10/24 GW 10.2.1.254
 
-- enlevez toute config IP effectuée au préalable
+Hostname is too long. (Maximum 12 characters)
 
-- vous pouvez par exemple `sudo nmcli con del enp0s3` s'il s'agit de l'interface `enp0s3` pour supprimer la conf liée à `enp0s3`
+VPCS> show ip
 
-- configurez l'interface pour qu'elle récupère une IP dynamique, c'est à dire avec DHCP
+NAME        : VPCS[1]
+IP/MASK     : 10.2.1.10/24
+GATEWAY     : 10.2.1.254
+DNS         : 
+DHCP SERVER : 10.2.1.253
+DHCP LEASE  : 43185, 43200/21600/37800
+MAC         : 00:50:79:66:68:00
+LPORT       : 20005
+RHOST:PORT  : 127.0.0.1:20006
+MTU         : 1500
 
-- vérifiez que :
-
-  - l'IP obtenue est correcte
-
-  - votre table de routage a bien été mise à jour automatiquement avec l'adresse de la passerelle en route par défaut (votre option DHCP a bien été reçue !)
-
-  - vous pouvez immédiatement joindre internet
-
-  
-
-![DHCP](img/dhcp_server.png)
-
-  
-
+VPCS>
+```
 🌟 **BONUS**
+```
+VPCS> show ip
 
-  
+NAME        : VPCS[1]
+IP/MASK     : 10.2.1.10/24
+GATEWAY     : 10.2.1.254
+DNS         : 1.1.1.1
+DHCP SERVER : 10.2.1.253
+DHCP LEASE  : 43185, 43200/21600/37800
+MAC         : 00:50:79:66:68:00
+LPORT       : 20005
+RHOST:PORT  : 127.0.0.1:20006
+MTU         : 1500
 
-- ajouter une autre ligne dans la conf du serveur DHCP pour qu'il donne aussi l'adresse d'un serveur DNS (utilisez `1.1.1.1` comme serveur DNS : c'est l'un des serveurs DNS de CloudFlare, un gros acteur du web)
-
-  
+VPCS>
+```
 
 🌞 **Wireshark it !**
 
-  
-
-- je veux une capture Wireshark qui contient l'échange DHCP DORA
-
-- vous hébergerez la capture dans le dépôt Git avec le TP
-
-  
-
-> Si vous fouillez un peu dans l'échange DORA? vous pourrez voir les infos DHCP circuler : comme votre option DHCP qui a un champ dédié dans l'un des messages.
-
-  
-
-➜ A la fin de cette section vous avez donc :
-
-  
-
-- un serveur DHCP qui donne aux clients toutes les infos nécessaires pour avoir un accès internet automatique
-
-  
+[échange DORA](échange_DHCP_DORA.pcapng)
 
 # III. ARP
-
-  
-
 ## 1. Les tables ARP
 
   
