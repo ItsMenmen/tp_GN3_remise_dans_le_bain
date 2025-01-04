@@ -106,7 +106,7 @@ subnet 10.2.1.0 netmask 255.255.255.0 {
     range 10.2.1.10 10.2.1.253;
     option broadcast-address 10.2.1.255;
     option routers 10.2.1.254;
-    option domaine-name-servers 1.1.1.1;
+    option domain-name-servers 1.1.1.1;
 }
 ```
 
