@@ -46,3 +46,23 @@ Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 60/64/68 ms
 ```
+# 🌞 Accès internet LAN1
+```
+PC1> ping 8.8.8.8
+
+84 bytes from 8.8.8.8 icmp_seq=1 ttl=114 time=29.986 ms
+84 bytes from 8.8.8.8 icmp_seq=2 ttl=114 time=23.592 ms
+84 bytes from 8.8.8.8 icmp_seq=3 ttl=114 time=23.840 ms
+84 bytes from 8.8.8.8 icmp_seq=4 ttl=114 time=21.273 ms
+84 bytes from 8.8.8.8 icmp_seq=5 ttl=114 time=23.843 ms
+```
+# 🌞 Accès internet LAN2
+```
+PC4> ping 8.8.8.8
+
+84 bytes from 8.8.8.8 icmp_seq=1 ttl=113 time=39.645 ms
+84 bytes from 8.8.8.8 icmp_seq=2 ttl=113 time=34.268 ms
+84 bytes from 8.8.8.8 icmp_seq=3 ttl=113 time=33.557 ms
+84 bytes from 8.8.8.8 icmp_seq=4 ttl=113 time=40.286 ms
+84 bytes from 8.8.8.8 icmp_seq=5 ttl=113 time=41.148 ms
+```
