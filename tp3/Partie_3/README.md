@@ -48,10 +48,41 @@ MTU         : 1500
 PC4> ping efrei.fr
 efrei.fr resolved to 51.255.68.208
 
-84 bytes from 51.255.68.208 icmp_seq=1 ttl=53 time=29.676 ms
-84 bytes from 51.255.68.208 icmp_seq=2 ttl=53 time=24.036 ms
-84 bytes from 51.255.68.208 icmp_seq=3 ttl=53 time=28.247 ms
-84 bytes from 51.255.68.208 icmp_seq=4 ttl=53 time=25.962 ms
-84 bytes from 51.255.68.208 icmp_seq=5 ttl=53 time=32.531 ms
+84 bytes from 51.255.68.208 icmp_seq=1 ttl=53 time=39.999 ms
+84 bytes from 51.255.68.208 icmp_seq=2 ttl=53 time=28.390 ms
+84 bytes from 51.255.68.208 icmp_seq=3 ttl=53 time=22.898 ms
+
+
+PC4> ping dns.tp3.b2
+dns.tp3.b2 resolved to 10.3.3.1
+
+84 bytes from 10.3.3.1 icmp_seq=1 ttl=63 time=18.376 ms
+84 bytes from 10.3.3.1 icmp_seq=2 ttl=63 time=20.828 ms
+84 bytes from 10.3.3.1 icmp_seq=3 ttl=63 time=11.618 ms
+84 bytes from 10.3.3.1 icmp_seq=4 ttl=63 time=15.048 ms
+84 bytes from 10.3.3.1 icmp_seq=5 ttl=63 time=15.197 ms
+```
+# capture wireshark
+[preuveDNS.pcapng](preuve_ping.pcapng)
+
+# HTTP
+### 🌞 Preuve avec un client
+
+```
+root@debian:/home/julien# curl web.tp3.b2 | head
+
+ % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                Dload  Upload   Total   Spent    Left  Speed
+  0    0       0       0         0      0        0  --:--:--  --:--:--  --:--:--   0
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HTTP Server Test Page powered by: Rocky Linux</title>
+    <style type="text/css">
+      /*<![CDATA[*/
+      html {
+100  7620  100  7620     0      0   45863      0  --:--:--  --:--:--  --:--:-- 46181
 
 ```
